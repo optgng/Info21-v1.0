@@ -91,3 +91,20 @@ CREATE TABLE P2P
     FOREIGN KEY (CheckingPeer) REFERENCES Peers (Nickname),
     FOREIGN KEY (Checks) REFERENCES Checks (ID)
 );
+
+CREATE OR REPLACE PROCEDURE import_csv(csv_delimiter text)
+LANGUAGE plpgsql
+AS $$
+DECLARE
+  query text;
+BEGIN
+  query := 'COPY ' || quote_ident(current_schema) || '.' || quote_ident('peers') || ' FROM ''/home/teodorai/schoolprojects/Info21-v1.0/files_csv/peers.csv'' WITH CSV HEADER DELIMITER AS ''' || csv_delimiter || '''';
+  EXECUTE query;
+END;
+$$;
+
+
+
+CALL import_csv(',');
+
+COPY peers FROM '/home/teodorai/schoolprojects/Info21-v1.0/files_csv/peers.csv' WITH DELIMITER ',' CSV HEADER;
